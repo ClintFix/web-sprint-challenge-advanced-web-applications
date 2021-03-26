@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useHistory } from 'react-router-dom'
 import axios from "axios";
 
 const initialState = {
@@ -11,6 +12,8 @@ const Login = () => {
   // when you have handled the token, navigate to the BubblePage route
   const [ formData, setFormData ] = useState(initialState);
   const [ error, setError ] = useState('')
+
+  const history = useHistory();
 
   const handleChange = (e) => {
     setFormData(
@@ -25,6 +28,7 @@ const Login = () => {
       .post('http://localhost:5000/api/login', formData)
       .then(res => {
         localStorage.setItem('token', res.data.payload)
+        history.push("/bubblepage");
       })
       .catch(err => {
         setError(`Error ${err.response.status}: ${err.response.data.error}`)
