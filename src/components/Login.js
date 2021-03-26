@@ -10,6 +10,7 @@ const Login = () => {
   // make a post request to retrieve a token from the api
   // when you have handled the token, navigate to the BubblePage route
   const [ formData, setFormData ] = useState(initialState);
+  const [ error, setError ] = useState('')
 
   const handleChange = (e) => {
     setFormData(
@@ -20,8 +21,16 @@ const Login = () => {
   const login = (e) => {
     e.preventDefault();
 
-    //TODO: post request
+    axios
+      .post('http://localhost:5000/api/login', formData)
+      .then(res => {
+        localStorage.setItem('token', res.data.payload)
+      })
+      .catch(err => {
+        setError(`Error ${err.response.status}: ${err.response.data.error}`)
+      })
   }
+
 
   return (
     <>
@@ -30,6 +39,9 @@ const Login = () => {
         <input name='password' type='password' value={formData.password} onChange={handleChange} placeholder="Password" />
         <button>Log In</button>
       </form>
+      {
+        error ? <div>{error}</div> : null
+      }
     </>
   );
 };
