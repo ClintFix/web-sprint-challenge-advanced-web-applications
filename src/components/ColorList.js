@@ -36,6 +36,19 @@ const ColorList = ({ colors, updateColors }) => {
   };
 
   const deleteColor = color => {
+    
+    axiosWithAuth()
+      .delete(`http://localhost:5000/api/colors/${color.id}`)
+      .then(res => {
+        console.log(res)
+        let newColors = [...colors]
+        const colorIndex = newColors.findIndex(i => i.id === Number(res.data))
+        newColors.splice(colorIndex, 1)
+        updateColors(newColors)
+      })
+      .catch(err => {
+        console.log(err.response)
+      })
   };
 
   return (
